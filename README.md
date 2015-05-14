@@ -1,4 +1,4 @@
-# simba-api
+# tsm-server-api
 
 Uma aplicação [Sails](http://sailsjs.org)
 API no TSM Server para atender o SIMBA em consultas e solicitações de registros de nodes no TSM.
