@@ -54,3 +54,41 @@ I configured a grunt task to run all tests. Just run:
 grunt test
 ```
 
+You may need to setting up node environment again, if you have just opened a new shell.
+```
+nvm use stable
+grunt test
+```
+
+### Lifting the app
+
+To start the web service you run sails with the lift argument.
+```
+sails lift
+```
+
+You can specify which environment to load, production or development, by exporting a variable before lifting the app.
+
+```
+export NODE_ENV=development
+```
+
+or
+
+```
+export NODE_ENV=production
+```
+
+You can see the responses from the web service accessing any API from the browser or some tool like curl.
+
+http://localhost:1337/Node
+
+```
+curl http://localhost:1337/Node
+```
+
+### Creating an entry
+
+```
+curl -X POST --data 'name="DFCDSRVP0045_MENSAL"' http://localhost:1337/Node
+```
