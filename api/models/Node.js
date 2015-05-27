@@ -6,9 +6,31 @@
 */
 
 module.exports = {
-
+	autoCreatedAt: false,
+	autoUpdatedAt: false,
   attributes: {
-
+	  nodeName: {
+		  type: "string",
+		  required: true,
+		  minLength: 6,
+		  maxLength: 64
+	  },
+	  domainName: {
+		  type: "string",
+		  required: true
+	  },
+	  archDelete: {
+		  type: "boolean",
+		  required: false
+	  },
+	  backDelete: {
+		  type: "boolean",
+		  required: false
+	  },
+	  maxNummp: {
+		  type: "integer",
+		  required: false
+	  }
   }
 };
 

@@ -90,5 +90,33 @@ curl http://localhost:1337/Node
 ### Creating an entry
 
 ```
-curl -X POST --data 'name="DFCDSRVP0045_MENSAL"' http://localhost:1337/Node
+curl -X POST --data 'nodeName="DFCDSRVP0045_MENSAL"&domainName="LINUX"' http://localhost:1337/Node
+```
+
+Replace the values of the attributes *nodeName* and *domainName* at your wish.
+
+## Models
+
+The API has the following models.
+
+### Node
+
+The Node models is responsible to handle with TSM Nodes requests. It has the attributes below:
+
+* *nodeName*: string, required
+* *domainName*: string, required
+* *archDelete*: boolean, optional
+* *backDelete*: boolean, optional
+* *maxNummp*: integer, optional
+
+To search for a node you can open the following URL in your browser:
+
+```
+http://localhost:1337/node/find?nodeName="DFCDSRVP0045_MENSAL"
+```
+
+Or post it using curl:
+
+```
+curl -X POST --data 'nodeName="DFCDSRVP0045_MENSAL"' http://localhost:1337/Node/find
 ```
