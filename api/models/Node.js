@@ -13,7 +13,8 @@ module.exports = {
 		  type: "string",
 		  required: true,
 		  minLength: 6,
-		  maxLength: 64
+		  maxLength: 64,
+		  unique: true
 	  },
 	  domainName: {
 		  type: "string",
