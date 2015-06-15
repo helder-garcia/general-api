@@ -33,6 +33,7 @@
     "request": "^2.55.0",
     "sails": "~0.11.0",
     "sails-disk": "~0.10.0",
+    "shelljs": "^0.5.1",
     "should": "^6.0.3",
     "sinon": "^1.14.1",
     "supertest": "^1.0.1",

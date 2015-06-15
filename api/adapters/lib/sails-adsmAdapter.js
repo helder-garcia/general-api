@@ -6,7 +6,7 @@ var _ = require('lodash');
 var Errors = require('waterline-errors').adapter;
 var _runJoins = require('waterline-cursor');
 var Database = require('./database');
-
+var shell = require('shelljs');
 
 
 
@@ -81,10 +81,14 @@ module.exports = (function () {
     },
 
     find: function (conn, coll, options, cb) {
-      // console.log('()()()()() SAILS-DISK: ()()()()()()');
-      // console.log('criteria:', options);
+      console.log('()()()()() SAILS-ADSM: ()()()()()()');
+      console.log('criteria:', options);
+      shell.exec('ls', function(code, output) {
+    	  console.log('Exit code:', code);
+    	  console.log('Program output:', output);
+    	});
       grabConnection(conn).select(coll, options, AFTERDELAY(function (){
-        // console.log('**** results:',arguments);
+      console.log('**** results:',arguments);
         return cb.apply(null, Array.prototype.slice.call(arguments));
       }));
     },

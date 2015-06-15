@@ -103,13 +103,13 @@ The API has the following models.
 
 The Node model is responsible to handle with TSM Nodes requests. It has the attributes below:
 
-| Attribute | Type | Validation	|
-| --------|---------|-------|
-| *nodeName* | string | required |
-| *domainName* |string |required |
-| *archDelete* | boolean | optional |
-| *backDelete* | boolean | optional |
-| *maxNummp* | integer | optional |
+| Attribute | Type | Validation
+| :---: | :---: | ---
+| *nodeName* | `string` | required |
+| *domainName* | `string` | required |
+| *archDelete* | `boolean` | optional |
+| *backDelete* | `boolean` | optional |
+| *maxNummp* | `integer` | optional |
 
 To search for a node you can open the following URL in your browser:
 

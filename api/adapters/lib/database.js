@@ -211,7 +211,7 @@ Database.prototype.read = function(cb) {
       }
     });
   }
-
+  console.log('Pre fetching:', state.data);
   self.data = state.data;
   self.schema = state.schema;
   self.counters = state.counters;
