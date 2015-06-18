@@ -7,7 +7,7 @@ var Errors = require('waterline-errors').adapter;
 var _runJoins = require('waterline-cursor');
 var Database = require('./database');
 var shell = require('shelljs');
-
+shell.config.silent = true;
 
 
 
@@ -27,18 +27,21 @@ module.exports = (function () {
     identity: 'sails-adsm',
 
     // Which type of primary key is used by default
-    pkFormat: 'integer',
+   // pkFormat: 'integer',
 
     // Whether this adapter is syncable (yes)
-    syncable: true,
+    // syncable: true,
+    syncable: false,
 
     // How this adapter should be synced
-    migrate: 'alter',
+    migrate: 'safe',
 
     // Allow a schemaless datastore
     defaults: {
       schema: false,
-      filePath: '.tmp/'
+      commandPath: '/opt/tivoli/tsm/client/ba/bin/',
+      commandName: 'dsmadmc',
+      serverName: 'tsmsrv1'
     },
 
     // Register A Connection
@@ -81,16 +84,32 @@ module.exports = (function () {
     },
 
     find: function (conn, coll, options, cb) {
-      console.log('()()()()() SAILS-ADSM: ()()()()()()');
-      console.log('criteria:', options);
-      shell.exec('ls', function(code, output) {
-    	  console.log('Exit code:', code);
-    	  console.log('Program output:', output);
+      // console.log('()()()()() SAILS-ADSM: ()()()()()()');
+      // console.log('criteria:', options);
+      var result =[];
+	  var nodeRegex = new RegExp(/(\w+)[\s|\t]+.*/);
+	  var domainRegex = new RegExp(/\w+[\s|\t]+\(\?\)[\s|\t]+(\w+)[\s|\t]+.*/);
+      var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "q node"';
+      var child = shell.exec(cmd, {async: true});
+      child.stdout.on('data', function(data) {
+    	 
+    	  arrayOfLines = data.match(/[^\r\n]+/g);
+    	  
+    	  for (var i = 0, len = arrayOfLines.length; i < len; i++) {
+    		  
+    		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+
+    		 // console.log(nodeRegex.exec(arrayOfLines[i])[1]);
+    		  result.push({
+    			  nodeName: nodeRegex.exec(arrayOfLines[i])[1],
+    			  domainName: domainRegex.exec(arrayOfLines[i])[1]
+    		    });	 
+    	  }
+    	  
     	});
-      grabConnection(conn).select(coll, options, AFTERDELAY(function (){
-      console.log('**** results:',arguments);
-        return cb.apply(null, Array.prototype.slice.call(arguments));
-      }));
+      child.stdout.on('end', function() { cb(null, result); });
+      
+ 
     },
 
     join: function (conn, coll, criteria, _cb) {
@@ -110,24 +129,28 @@ module.exports = (function () {
         parentCollection: parentIdentity,
 
         /**
-         * Find some records directly (using only this adapter)
-         * from the specified collection.
-         *
-         * @param  {String}   collectionIdentity
-         * @param  {Object}   criteria
-         * @param  {Function} cb
-         */
+		 * Find some records directly (using only this adapter) from the
+		 * specified collection.
+		 * 
+		 * @param {String}
+		 *            collectionIdentity
+		 * @param {Object}
+		 *            criteria
+		 * @param {Function}
+		 *            cb
+		 */
         $find: function (collectionIdentity, criteria, cb) {
           return db.select(collectionIdentity, criteria, cb);
         },
 
         /**
-         * Look up the name of the primary key field
-         * for the collection with the specified identity.
-         *
-         * @param  {String}   collectionIdentity
-         * @return {String}
-         */
+		 * Look up the name of the primary key field for the collection with the
+		 * specified identity.
+		 * 
+		 * @param {String}
+		 *            collectionIdentity
+		 * @return {String}
+		 */
         $getPK: function (collectionIdentity) {
           if (!collectionIdentity) return;
           return db.getPKField(collectionIdentity);
@@ -153,12 +176,13 @@ module.exports = (function () {
   adapter.createEach = adapter.create;
 
   /**
-   * Grab the connection object for a connection name
-   *
-   * @param {String} connectionName
-   * @return {Object}
-   * @api private
-   */
+	 * Grab the connection object for a connection name
+	 * 
+	 * @param {String}
+	 *            connectionName
+	 * @return {Object}
+	 * @api private
+	 */
 
   function grabConnection(connectionName) {
     return connections[connectionName];
@@ -170,9 +194,11 @@ module.exports = (function () {
 
 
 /**
- * Return a function that stalls for one milisecond before
- * calling `cb` with the expected arguments and context.
- * @param {Function} cb
+ * Return a function that stalls for one milisecond before calling `cb` with the
+ * expected arguments and context.
+ * 
+ * @param {Function}
+ *            cb
  * @return {Function}
  */
 function AFTERDELAY(cb) {

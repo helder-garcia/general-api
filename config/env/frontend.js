@@ -17,7 +17,7 @@ module.exports = {
 	 **************************************************************************/
 
 	models : {
-		connection : 'developmentTsmServer'
+		connection : 'localDiskDb'
 	}
 
 };
