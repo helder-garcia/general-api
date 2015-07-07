@@ -160,6 +160,32 @@ module.exports = (function () {
     },
 
     create: function (conn, coll, values, cb) {
+    	var self = this;
+    	var originalValues = _.clone(values);
+    	if(!Array.isArray(values)) values = [values];
+		  for (var i in values) {
+			    var record = values[i];
+			    Object.keys(record).forEach(function(key) {
+			    	record[key] = record[key].replace(/(\")/g,"");
+			    });
+			    console.log("nodeName: " + record['nodeName']);
+			   // self.data[conn].push(record);
+		  };
+		  
+		  cb(null, Array.isArray(originalValues) ? values : values[0]);
+		  /*
+    	var $nodeName = values.nodeName;
+    	$nodeName = $nodeName.replace(/(\")/g,"");
+    	var $domainName = values.domainName;
+    	$domainName = $domainName.replace(/(\")/g,"");
+    	var $archDelete = values.archDelete;
+    	$archDelete = $archDelete.replace(/(\")/g,"");
+    	var $backDelete = values.backDelete;
+    	$backDelete = $backDelete.replace(/(\")/g,"");
+    	var $maxNummp = values.maxNummp;
+    	$maxNummp = $maxNummp.replace(/(\")/g,"");
+    	*/
+
     	/*
         var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "q node"';
         var child = shell.exec(cmd, {async: true});
@@ -184,18 +210,8 @@ module.exports = (function () {
     	//console.log("conn: " + conn + "\n");
     	//console.log("coll: " + coll + "\n");
     	//console.log("values: " + JSON.stringify(values, null, 4) + "\n");
-    	var $nodeName = values.nodeName;
-    	$nodeName = $nodeName.replace(/(\")/g,"");
-    	var $domainName = values.domainName;
-    	$domainName = $domainName.replace(/(\")/g,"");
-    	var $archDelete = values.archDelete;
-    	$archDelete = $archDelete.replace(/(\")/g,"");
-    	var $backDelete = values.backDelete;
-    	$backDelete = $backDelete.replace(/(\")/g,"");
-    	var $maxNummp = values.maxNummp;
-    	$maxNummp = $maxNummp.replace(/(\")/g,"");
-    	console.log("nodeName: " + $nodeName);
-    	console.log("domainName: " + $domainName);
+    	//console.log("nodeName: " + $nodeName);
+    	//console.log("domainName: " + $domainName);
     },
 
     update: function (conn, coll, options, values, cb) {
