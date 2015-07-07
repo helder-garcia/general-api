@@ -160,7 +160,42 @@ module.exports = (function () {
     },
 
     create: function (conn, coll, values, cb) {
-      grabConnection(conn).insert(coll, values, AFTERDELAY(cb));
+    	/*
+        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "q node"';
+        var child = shell.exec(cmd, {async: true});
+        child.stdout.on('data', function(data) {
+
+      	  arrayOfLines = data.match(/[^\r\n]+/g);
+      	  
+      	  for (var i = 0, len = arrayOfLines.length; i < len; i++) {
+      		  
+      		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+
+      		 // console.log(nodeRegex.exec(arrayOfLines[i])[1]);
+      		  result.push({
+      			  nodeName: nodeRegex.exec(arrayOfLines[i])[1],
+      			  domainName: domainRegex.exec(arrayOfLines[i])[1]
+      		    });	 
+      	  }
+      	  
+      	});
+        child.stdout.on('end', function() { cb(null, result); });
+		*/
+    	//console.log("conn: " + conn + "\n");
+    	//console.log("coll: " + coll + "\n");
+    	//console.log("values: " + JSON.stringify(values, null, 4) + "\n");
+    	var $nodeName = values.nodeName;
+    	$nodeName = $nodeName.replace(/(\")/g,"");
+    	var $domainName = values.domainName;
+    	$domainName = $domainName.replace(/(\")/g,"");
+    	var $archDelete = values.archDelete;
+    	$archDelete = $archDelete.replace(/(\")/g,"");
+    	var $backDelete = values.backDelete;
+    	$backDelete = $backDelete.replace(/(\")/g,"");
+    	var $maxNummp = values.maxNummp;
+    	$maxNummp = $maxNummp.replace(/(\")/g,"");
+    	console.log("nodeName: " + $nodeName);
+    	console.log("domainName: " + $domainName);
     },
 
     update: function (conn, coll, options, values, cb) {
