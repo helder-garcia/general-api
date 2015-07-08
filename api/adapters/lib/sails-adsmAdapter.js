@@ -166,9 +166,16 @@ module.exports = (function () {
 		  for (var i in values) {
 			    var record = values[i];
 			    Object.keys(record).forEach(function(key) {
-			    	record[key] = record[key].replace(/(\")/g,"");
+			    	if(typeof(record[key]) === 'string')
+			    		record[key] = record[key].replace(/(\")/g,"");
 			    });
-			    console.log("nodeName: " + record['nodeName']);
+
+			    record['archDelete'] = typeof(record['archDelete']) == "undefined" ? true : record['archDelete'];
+			    record['backDelete'] = typeof(record['backDelete']) == "undefined" ? true : record['backDelete'];
+			    record['maxNummp'] = typeof(record['maxNummp']) == "undefined" ? 4 : record['maxNummp'];
+			    //console.log("archDelete: ", record['archDelete']);
+			    //record['archDelete'] = record['archDelete'] === '0' ? false : true;
+			    //console.log("archDelete: " + record['archDelete']);
 			   // self.data[conn].push(record);
 		  };
 		  

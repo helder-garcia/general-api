@@ -6,6 +6,7 @@
 */
 
 module.exports = {
+	autoPk: true,
 	autoCreatedAt: false,
 	autoUpdatedAt: false,
   attributes: {
@@ -14,7 +15,8 @@ module.exports = {
 		  required: true,
 		  minLength: 6,
 		  maxLength: 64,
-		  unique: true
+		  unique: true,
+		  primaryKey: true
 	  },
 	  domainName: {
 		  type: "string",
