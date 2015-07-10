@@ -92,20 +92,14 @@ module.exports = (function () {
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "q node"';
       var child = shell.exec(cmd, {async: true});
       child.stdout.on('data', function(data) {
-
-    	  arrayOfLines = data.match(/[^\r\n]+/g);
-    	  
-    	  for (var i = 0, len = arrayOfLines.length; i < len; i++) {
-    		  
+    	  arrayOfLines = data.match(/[^\r\n]+/g);   	  
+    	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
     		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
-
-    		 // console.log(nodeRegex.exec(arrayOfLines[i])[1]);
     		  result.push({
     			  nodeName: nodeRegex.exec(arrayOfLines[i])[1],
     			  domainName: domainRegex.exec(arrayOfLines[i])[1]
     		    });	 
-    	  }
-    	  
+    	  }    	  
     	});
       child.stdout.on('end', function() { cb(null, result); });
       
@@ -169,17 +163,46 @@ module.exports = (function () {
 			    	if(typeof(record[key]) === 'string')
 			    		record[key] = record[key].replace(/(\")/g,"");
 			    });
-
 			    record['archDelete'] = typeof(record['archDelete']) == "undefined" ? true : record['archDelete'];
 			    record['backDelete'] = typeof(record['backDelete']) == "undefined" ? true : record['backDelete'];
 			    record['maxNummp'] = typeof(record['maxNummp']) == "undefined" ? 4 : record['maxNummp'];
-			    //console.log("archDelete: ", record['archDelete']);
-			    //record['archDelete'] = record['archDelete'] === '0' ? false : true;
-			    //console.log("archDelete: " + record['archDelete']);
+			    /**** That's the create part of the code. Consider making it a service ****/
+			      var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+			      		' -id=web_service -password=web_service -dataonly=yes ' + 
+			      		'"reg node ' +
+			      		record['nodeName'] + ' ' +
+			      		record['nodeName'] + ' ' +
+			      		'domain=' +
+			      		record['domainName'] +
+			      		'"';
+			      
+			      var child = shell.exec(cmd, {async: false});
+			      console.log(child.code);
+			      /*
+			       * 0  - Success
+			       * 10 - Node name already exists
+			       * 11 - Domain name does not exist
+			       * 
+			       */
+			      var err = {};
+			      if (child.code == 10) err.status = 400;
+			      if (child.code == 10) return cb(err);
+			      if (child.code == 0) cb(null, Array.isArray(originalValues) ? values : values[0]);
+			      /*
+			      child.stdout.on('data', function(data) {
+			    	  console.log(data);
+			    	});
+			      child.stdout.on('end', function() { 
+			    	  console.log(child.code);
+			    	  	cb(null, Array.isArray(originalValues) ? values : values[0]); 
+			    	  });
+
+			    */
+
 			   // self.data[conn].push(record);
 		  };
 		  
-		  cb(null, Array.isArray(originalValues) ? values : values[0]);
+		  //cb(null, Array.isArray(originalValues) ? values : values[0]);
 		  /*
     	var $nodeName = values.nodeName;
     	$nodeName = $nodeName.replace(/(\")/g,"");

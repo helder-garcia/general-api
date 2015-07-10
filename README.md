@@ -67,7 +67,7 @@ To start the web service you run sails with the lift argument.
 sails lift
 ```
 
-You can specify which environment to load, production or development, by exporting a variable before lifting the app.
+You can specify which environment to load, production, development, or frontend, by exporting a variable before lifting the app.
 
 ```
 export NODE_ENV=development
@@ -78,6 +78,14 @@ or
 ```
 export NODE_ENV=production
 ```
+
+or
+
+```
+export NODE_ENV=frontend
+```
+
+The *frontend* environment use local disk as data storage. *Development* uses a TSM instance deployed for testing purpose, and *production* should talk to real TSM instances.
 
 You can see the responses from the web service accessing any API from the browser or some tool like curl.
 
@@ -90,7 +98,7 @@ curl http://localhost:1337/Node
 ### Creating an entry
 
 ```
-curl -X POST --data 'nodeName="DFCDSRVP0045_MENSAL"&domainName="LINUX"' http://localhost:1337/Node
+curl -X POST --data 'nodeName=DFCDSRVP0045_MENSAL&domainName=LINUX' http://localhost:1337/Node
 ```
 
 Replace the values of the attributes *nodeName* and *domainName* at your wish.
