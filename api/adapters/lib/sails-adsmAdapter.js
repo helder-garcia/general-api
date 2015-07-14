@@ -7,6 +7,7 @@ var Errors = require('waterline-errors').adapter;
 var _runJoins = require('waterline-cursor');
 var Database = require('./database');
 var shell = require('shelljs');
+
 shell.config.silent = true;
 
 
@@ -177,16 +178,14 @@ module.exports = (function () {
 			      		'"';
 			      
 			      var child = shell.exec(cmd, {async: false});
-			      console.log(child.code);
 			      /*
 			       * 0  - Success
 			       * 10 - Node name already exists
 			       * 11 - Domain name does not exist
 			       * 
 			       */
-			      var err = {};
-			      if (child.code == 10) err.status = 400;
-			      if (child.code == 10) return cb(err);
+			      if (child.code == 10) return cb(new Error('Node name already exists'));
+			      if (child.code == 11) return cb({status: 404, name: "AdapterError", message: "Domain name does not exist"});
 			      if (child.code == 0) cb(null, Array.isArray(originalValues) ? values : values[0]);
 			      /*
 			      child.stdout.on('data', function(data) {
