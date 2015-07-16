@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-		connection : 'localDiskDb',
+		connection : 'tsmserverapi',
 		autoPk: true,
 		autoCreatedAt: false,
 		autoUpdatedAt: false,
@@ -14,7 +14,7 @@ module.exports = {
 			username: {
 				type: "string",
 				required: true,
-				minLength: 6,
+				minLength: 5,
 				maxLength: 24,
 				unique: true
 			},
@@ -46,7 +46,8 @@ module.exports = {
 			// Encrypts the password/confirmation to be stored in the db
 			require('bcrypt').hash(values.password, 10, function passwordEncrypted(err, encryptedPassword) {
 				values.encryptedPassword = encryptedPassword;
-
+				delete values.confirmation;
+				delete values.password;
 				next();
 			});
 		}
