@@ -185,7 +185,7 @@ module.exports = (function () {
 			       * 
 			       */
 			      if (child.code == 10) return cb(new Error('Node name already exists'));
-			      if (child.code == 11) return cb({status: 404, name: "AdapterError", message: "Domain name does not exist"});
+			      if (child.code == 11) return cb(new Error("Domain name does not exist"));
 			      if (child.code == 0) cb(null, Array.isArray(originalValues) ? values : values[0]);
 			      /*
 			      child.stdout.on('data', function(data) {
