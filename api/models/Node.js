@@ -18,6 +18,10 @@ module.exports = {
 		  unique: true,
 		  primaryKey: true
 	  },
+	  platformName: {
+		  type: "string",
+		  required: true
+	  },
 	  domainName: {
 		  type: "string",
 		  required: true
@@ -27,6 +31,10 @@ module.exports = {
 		  required: false
 	  },
 	  backDelete: {
+		  type: "string",
+		  required: false
+	  },
+	  isLocked: {
 		  type: "string",
 		  required: false
 	  },
