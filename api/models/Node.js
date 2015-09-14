@@ -40,7 +40,7 @@ module.exports = {
 	  },
 	  platformName: {
 		  type: "string",
-		  required: true
+		  required: false
 	  }
   }
 };
