@@ -23,11 +23,11 @@ module.exports = {
 		  required: true
 	  },
 	  archDelete: {
-		  type: "boolean",
+		  type: "string",
 		  required: false
 	  },
 	  backDelete: {
-		  type: "boolean",
+		  type: "string",
 		  required: false
 	  },
 	  maxNummp: {
