@@ -105,7 +105,8 @@ module.exports = (function () {
     			  archDelete: parsedLine[3],
     			  backDelete: parsedLine[4],
     			  isLocked: parsedLine[5],
-    			  maxNummp: parsedLine[6]
+    			  maxNummp: parsedLine[6],
+    			  platformName: parsedLine[7]
     		    });	 
     	  }    	  
     	});
