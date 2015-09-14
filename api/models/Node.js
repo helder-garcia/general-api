@@ -18,10 +18,6 @@ module.exports = {
 		  unique: true,
 		  primaryKey: true
 	  },
-	  platformName: {
-		  type: "string",
-		  required: true
-	  },
 	  domainName: {
 		  type: "string",
 		  required: true
@@ -41,6 +37,10 @@ module.exports = {
 	  maxNummp: {
 		  type: "integer",
 		  required: false
+	  },
+	  platformName: {
+		  type: "string",
+		  required: true
 	  }
   }
 };
