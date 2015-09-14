@@ -164,8 +164,8 @@ module.exports = (function () {
 			    	if(typeof(record[key]) === 'string')
 			    		record[key] = record[key].replace(/(\")/g,"");
 			    });
-			    record['archDelete'] = typeof(record['archDelete']) == "undefined" ? true : record['archDelete'];
-			    record['backDelete'] = typeof(record['backDelete']) == "undefined" ? false : record['backDelete'];
+			    record['archDelete'] = typeof(record['archDelete']) == "undefined" ? "yes" : record['archDelete'];
+			    record['backDelete'] = typeof(record['backDelete']) == "undefined" ? "no" : record['backDelete'];
 			    record['maxNummp'] = typeof(record['maxNummp']) == "undefined" ? 4 : record['maxNummp'];
 			    /**** That's the create part of the code. Consider making it a service ****/
 			      var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
