@@ -89,7 +89,7 @@ module.exports = (function () {
     find: function (conn, coll, options, cb) {
       var result =[];
 	  var nodeRegex = new RegExp(/(\w+)[\s|\t]+.*/);
-	  var myRegex = new RegExp((/\w+)[\s|\t]+\(\?\)[\s|\t]+(\w+)[\s|\t]+.*/);
+	  var myRegex = new RegExp(/(\w+)[\s|\t]+\(\?\)[\s|\t]+(\w+)[\s|\t]+.*/);
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "select NODE_NAME, PLATFORM_NAME, DOMAIN_NAME, ARCHDELETE, BACKDELETE, LOCKED, MAX_MP_ALLOWED from nodes"';
       var child = shell.exec(cmd, {async: true});
       child.stdout.on('data', function(data) {
