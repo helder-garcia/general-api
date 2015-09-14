@@ -174,7 +174,9 @@ module.exports = (function () {
 			      		record['nodeName'] + ' ' +
 			      		record['nodeName'] + ' ' +
 			      		'domain=' +
-			      		record['domainName'] +
+			      		record['domainName'] + ' ' +
+			      		'maxnummp=' +
+			      		record['maxNummp'] +
 			      		'"';
 			      
 			      var child = shell.exec(cmd, {async: false});
