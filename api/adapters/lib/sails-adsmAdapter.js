@@ -110,7 +110,11 @@ module.exports = (function () {
     		    });	 
     	  }    	  
     	});
-      child.stdout.on('end', function() { cb(null, result); });
+      
+      child.stdout.on('end', function() { 
+    	  var response = { "count" : result.length, "data" : result};
+    	  cb(null, response); 
+    	  });
       
  
     },
