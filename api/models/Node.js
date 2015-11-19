@@ -34,6 +34,10 @@ module.exports = {
 		  type: "string",
 		  required: false
 	  },
+	  lastAccTime: {
+		  type: "string",
+		  required: false
+	  },
 	  maxNummp: {
 		  type: "integer",
 		  required: false

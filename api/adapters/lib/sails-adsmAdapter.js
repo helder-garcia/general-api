@@ -92,7 +92,17 @@ module.exports = (function () {
 	  
 	  var myRegex = new RegExp(/(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)*.*/);
 
-      var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + ' -id=web_service -password=web_service -dataonly=yes "select NODE_NAME, DOMAIN_NAME, ARCHDELETE, BACKDELETE, LOCKED, MAX_MP_ALLOWED, PLATFORM_NAME from nodes"';
+      var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+      ' -id=web_service -password=web_service -dataonly=yes' + 
+      ' "select NODE_NAME,' +
+      ' DOMAIN_NAME,' +
+      ' ARCHDELETE,' +
+      ' BACKDELETE,' +
+      ' LOCKED,' +
+      ' LASTACC_TIME,' +
+      ' MAX_MP_ALLOWED,' +
+      ' PLATFORM_NAME' +
+      ' from nodes"';
       var child = shell.exec(cmd, {async: true});
       child.stdout.on('data', function(data) {
     	  arrayOfLines = data.match(/[^\r\n]+/g);
@@ -106,8 +116,9 @@ module.exports = (function () {
     			  archDelete: parsedLine[3],
     			  backDelete: parsedLine[4],
     			  isLocked: parsedLine[5],
-    			  maxNummp: parsedLine[6],
-    			  platformName: parsedLine[7]
+    			  lastAccTime: parsedLine[6],
+    			  maxNummp: parsedLine[7],
+    			  platformName: parsedLine[8]
     		    });	 
     	  }    	  
     	});
