@@ -41,10 +41,11 @@ module.exports = (function () {
 
     // Allow a schemaless datastore
     defaults: {
-      schema: false,
-      commandPath: '/opt/tivoli/tsm/client/ba/bin/',
-      commandName: 'dsmadmc',
-      serverName: serverNameConfig
+    	type: 'json',
+    	schema: false,
+    	commandPath: '/opt/tivoli/tsm/client/ba/bin/',
+    	commandName: 'dsmadmc',
+    	serverName: serverNameConfig
     },
 
     // Register A Connection
@@ -113,8 +114,8 @@ module.exports = (function () {
       
       child.stdout.on('end', function() { 
     	  var response = { "count" : result.length, "data" : result};
-    	  cb.apply(null, Array.prototype.slice.call(response));
-    	  //cb(null, response); 
+    	  //cb.apply(null, Array.prototype.slice.call(response));
+    	  cb(null, response); 
     	  });
       
  
