@@ -113,7 +113,7 @@ module.exports = (function () {
       
       child.stdout.on('end', function() { 
     	  var response = { "count" : result.length, "data" : result};
-    	  return cb.apply(null, Array.prototype.slice.call(response));
+    	  cb.apply(null, Array.prototype.slice.call(response));
     	  //cb(null, response); 
     	  });
       
