@@ -90,7 +90,7 @@ module.exports = (function () {
     find: function (conn, coll, options, cb) {
       var result =[];
 	  
-	  var myRegex = new RegExp(/(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\d\d\d\d-\d\d-\d\d\s\d\d\:\d\d\:\d\d\.\d\d\d\d\d\d)[\s|\t]+(\w+)[\s|\t]+(\w+)*.*/);
+	  var myRegex = new RegExp(/(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\d\d\d\d-\d\d-\d\d\s\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d[\s|\t]+(\w+)[\s|\t]+(\w+)*.*/);
 
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
       ' -id=web_service -password=web_service -dataonly=yes' + 
