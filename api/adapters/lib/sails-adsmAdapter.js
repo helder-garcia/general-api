@@ -88,12 +88,21 @@ module.exports = (function () {
     },
 
     find: function (conn, coll, options, cb) {
+    	console.log(coll + ' ' + options);
+    	switch (coll) {
+	    	case "node": this.findNode(options, cb); break;
+	    	case "activity": this.findActivity(options, cb); break;
+	    	case "migsummary": this.findMigSummary(options, cb); break;
+	    	case "drive": this.findDrive(options, cb); break;
+    	}
+ 
+    },
+    
+    findNode: function(options, cb) {
       var result =[];
-	  
-	  var myRegex = new RegExp(/(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\w+)[\s|\t]+(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d[\s|\t]+(\w+)[\s|\t]+(\w+)*.*/);
-
+  	  var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d,(\w+),(\w*)*.*/);
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
-      ' -id=web_service -password=web_service -dataonly=yes' + 
+      ' -id=web_service -password=web_service -dataonly=yes -displaymode=tab -comma' + 
       ' "select NODE_NAME,' +
       ' DOMAIN_NAME,' +
       ' ARCHDELETE,' +
@@ -122,16 +131,134 @@ module.exports = (function () {
     		    });	 
     	  }    	  
     	});
-      
       child.stdout.on('end', function() { 
     	  //var response = { "count" : result.length, "data" : result};
     	  //cb.apply(null, Array.prototype.slice.call(response));
     	  cb(null, result); 
-    	  });
-      
- 
+    	  });      
     },
 
+    findDrive: function(options, cb) {
+        var result =[];
+    	var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\w*),(\w+),(\w*)*.*/);
+        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+        ' -id=web_service -password=web_service -dataonly=yes -displaymode=tab -comma' + 
+        ' "select LIBRARY_NAME,' +
+        ' DRIVE_NAME,' +
+        ' DEVICE_TYPE,' +
+        ' ONLINE,' +
+        ' DRIVE_STATE,' +
+        ' ALLOCATED_TO,' +
+        ' DRIVE_SERIAL,' +
+        ' VOLUME_NAME' +
+        ' from DRIVES"';
+        var child = shell.exec(cmd, {async: true});
+        child.stdout.on('data', function(data) {
+      	  arrayOfLines = data.match(/[^\r\n]+/g);
+      	  
+      	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
+      		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+      		  console.log(arrayOfLines[i]);
+      		  var parsedLine = myRegex.exec(arrayOfLines[i]);
+      		  result.push({
+      			libraryName: parsedLine[1],
+      			driveName: parsedLine[2],
+      			deviceType: parsedLine[3],
+      			driveOnline: parsedLine[4],
+      			driveState: parsedLine[5],
+      			allocatedTo: parsedLine[6],
+      			driveSerial: parsedLine[7],
+      			volumeName: parsedLine[8]
+      		  });	 
+      	  }    	  
+      	});
+        child.stdout.on('end', function() { 
+      	  //var response = { "count" : result.length, "data" : result};
+      	  //cb.apply(null, Array.prototype.slice.call(response));
+      	  cb(null, result); 
+      	  });      
+      },
+      
+    findMigSummary: function(options, cb) {
+        var result =[];
+    	var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d,(\w+),(\w+)*.*/);
+        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+        ' -id=web_service -password=web_service -dataonly=yes -displaymode=tab -comma' + 
+        ' "select NODE_NAME,' +
+        ' DOMAIN_NAME,' +
+        ' ARCHDELETE,' +
+        ' BACKDELETE,' +
+        ' LOCKED,' +
+        ' LASTACC_TIME,' +
+        ' MAX_MP_ALLOWED,' +
+        ' PLATFORM_NAME' +
+        ' from nodes"';
+        var child = shell.exec(cmd, {async: true});
+        child.stdout.on('data', function(data) {
+      	  arrayOfLines = data.match(/[^\r\n]+/g);
+      	  
+      	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
+      		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+      		  var parsedLine = myRegex.exec(arrayOfLines[i]);
+      		  result.push({
+      			  nodeName: parsedLine[1],
+      			  domainName: parsedLine[2],
+      			  archDelete: parsedLine[3],
+      			  backDelete: parsedLine[4],
+      			  isLocked: parsedLine[5],
+      			  lastAccTime: parsedLine[6] + 'T' + parsedLine[7],
+      			  maxNummp: parsedLine[8],
+      			  platformName: parsedLine[9]
+      		    });	 
+      	  }    	  
+      	});
+        child.stdout.on('end', function() { 
+      	  //var response = { "count" : result.length, "data" : result};
+      	  //cb.apply(null, Array.prototype.slice.call(response));
+      	  cb(null, result); 
+      	  });      
+      },
+
+      findActivity: function(options, cb) {
+          var result =[];
+      	var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d,(\w+),(\w+)*.*/);
+          var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+          ' -id=web_service -password=web_service -dataonly=yes -displaymode=tab -comma' + 
+          ' "select NODE_NAME,' +
+          ' DOMAIN_NAME,' +
+          ' ARCHDELETE,' +
+          ' BACKDELETE,' +
+          ' LOCKED,' +
+          ' LASTACC_TIME,' +
+          ' MAX_MP_ALLOWED,' +
+          ' PLATFORM_NAME' +
+          ' from nodes"';
+          var child = shell.exec(cmd, {async: true});
+          child.stdout.on('data', function(data) {
+        	  arrayOfLines = data.match(/[^\r\n]+/g);
+        	  
+        	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
+        		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+        		  var parsedLine = myRegex.exec(arrayOfLines[i]);
+        		  result.push({
+        			  nodeName: parsedLine[1],
+        			  domainName: parsedLine[2],
+        			  archDelete: parsedLine[3],
+        			  backDelete: parsedLine[4],
+        			  isLocked: parsedLine[5],
+        			  lastAccTime: parsedLine[6] + 'T' + parsedLine[7],
+        			  maxNummp: parsedLine[8],
+        			  platformName: parsedLine[9]
+        		    });	 
+        	  }    	  
+        	});
+          child.stdout.on('end', function() { 
+        	  //var response = { "count" : result.length, "data" : result};
+        	  //cb.apply(null, Array.prototype.slice.call(response));
+        	  cb(null, result); 
+        	  });      
+        },
+        
     join: function (conn, coll, criteria, _cb) {
 
       // Ensure nextTick
@@ -318,6 +445,6 @@ function AFTERDELAY(cb) {
     var origArgs = Array.prototype.slice.call(arguments);
     setTimeout(function () {
       cb.apply(origCtx, origArgs);
-    }, 1);
-  };
+		    }, 1);
+	};
 }

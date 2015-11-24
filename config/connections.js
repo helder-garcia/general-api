@@ -34,6 +34,6 @@ module.exports.connections = {
 
   developmentTsmServer: {
 	adapter: 'sails-adsm',
-	servername: 'tsmsrv1'
+	servername: 'tsm1700'
   }
 };
