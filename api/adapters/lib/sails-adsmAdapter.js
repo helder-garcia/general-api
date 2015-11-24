@@ -88,7 +88,6 @@ module.exports = (function () {
     },
 
     find: function (conn, coll, options, cb) {
-    	console.log(coll + ' ' + options);
     	switch (coll) {
 	    	case "node": this.findNode(options, cb); break;
 	    	case "activity": this.findActivity(options, cb); break;
@@ -141,7 +140,7 @@ module.exports = (function () {
     findDrive: function(options, cb) {
         var result =[];
     	var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\w*),(\w+),(\w*)*.*/);
-        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
+        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=tsm1700 ' +  
         ' -id=web_service -password=web_service -dataonly=yes -displaymode=tab -comma' + 
         ' "select LIBRARY_NAME,' +
         ' DRIVE_NAME,' +
@@ -158,7 +157,6 @@ module.exports = (function () {
       	  
       	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
       		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
-      		  console.log(arrayOfLines[i]);
       		  var parsedLine = myRegex.exec(arrayOfLines[i]);
       		  result.push({
       			libraryName: parsedLine[1],
