@@ -93,6 +93,7 @@ module.exports = (function () {
 	    	case "activity": this.findActivity(options, cb); break;
 	    	case "migsummary": this.findMigSummary(options, cb); break;
 	    	case "drive": this.findDrive(options, cb); break;
+	    	case "stgpct": this.findStgPct(options, cb); break;
     	}
  
     },
@@ -136,6 +137,36 @@ module.exports = (function () {
     	  cb(null, result); 
     	  });      
     },
+    
+    findStgPct: function(options, cb) {
+        var result =[];
+        var myRegex = new RegExp(/(\w+),(\w+\.\d),(\w+\.\d)*.*/);
+        var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=tsmbsbbkp2800' + 
+        ' -id=relatorios -password=relatorios -dataonly=yes -displaymode=tab -comma' + 
+        ' "select STGPOOL_NAME,' +
+        ' PCT_UTILIZED,' +
+        ' PCT_MIGR' +
+        ' from stgpools' +
+        ' where POOLTYPE=\'PRIMARY\'' + 
+        ' and (DEVCLASS=\'DISK\' OR DEVCLASS=\'FILE\')"';
+        var child = shell.exec(cmd, {async: true});
+        child.stdout.on('data', function(data) {
+      	  arrayOfLines = data.match(/[^\r\n]+/g);
+      	  
+      	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
+      		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
+      		  var parsedLine = myRegex.exec(arrayOfLines[i]);
+      		  result.push({
+      			  stgPoolName: parsedLine[1],
+      			  pctUtilized: parsedLine[2],
+      			  pctMig: parsedLine[3]
+      		    });	 
+      	  }    	  
+      	});
+        child.stdout.on('end', function() { 
+        	cb(null, result); 
+      	});      
+      },
 
     findDrive: function(options, cb) {
         var result =[];
