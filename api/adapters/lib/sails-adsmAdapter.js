@@ -24,6 +24,13 @@ module.exports = (function () {
 	
   // Hold connections for this adapter
   var connections = {};
+  function normalizeCriteria(options) {
+
+	  return _.mapValues(options, function (original, key) {
+	    if (key === 'where') return original;	   
+	    return "";
+	  });
+	};
 
   var adapter = {
 
@@ -99,6 +106,11 @@ module.exports = (function () {
     },
     
     findNode: function(options, cb) {
+//    	console.log("options: " + JSON.stringify(options, null, 4));
+      var criteria = _.mapValues(options, 'nodeName');
+      var whereNode = criteria.where;
+
+
       var result =[];
   	  var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d,(\w+),(\w*)*.*/);
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
@@ -111,7 +123,12 @@ module.exports = (function () {
       ' LASTACC_TIME,' +
       ' MAX_MP_ALLOWED,' +
       ' PLATFORM_NAME' +
-      ' from nodes"';
+      ' from nodes';
+      if(_.isEmpty(whereNode)) {
+    	  cmd = cmd + '"';
+      } else {
+    	  cmd = cmd + ' where NODE_NAME=\'' + whereNode + '\'"';
+      }
       var child = shell.exec(cmd, {async: true});
       child.stdout.on('data', function(data) {
     	  arrayOfLines = data.match(/[^\r\n]+/g);
@@ -127,7 +144,9 @@ module.exports = (function () {
     			  isLocked: parsedLine[5],
     			  lastAccTime: parsedLine[6] + 'T' + parsedLine[7],
     			  maxNummp: parsedLine[8],
-    			  platformName: parsedLine[9]
+    			  platformName: parsedLine[9],
+    			  instanceIp: "10.200.144.37",
+    			  instancePort: "3501"
     		    });	 
     	  }    	  
     	});
