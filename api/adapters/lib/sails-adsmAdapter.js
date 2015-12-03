@@ -106,11 +106,9 @@ module.exports = (function () {
     },
     
     findNode: function(options, cb) {
-//    	console.log("options: " + JSON.stringify(options, null, 4));
+    //	console.log("options: " + JSON.stringify(cb, null, 4));
       var criteria = _.mapValues(options, 'nodeName');
       var whereNode = criteria.where;
-
-
       var result =[];
   	  var myRegex = new RegExp(/(\w+),(\w+),(\w+),(\w+),(\w+),(\d\d\d\d-\d\d-\d\d)\s(\d\d\:\d\d\:\d\d)\.\d\d\d\d\d\d,(\w+),(\w*)*.*/);
       var cmd = this.defaults.commandPath + this.defaults.commandName + ' -se=' + this.defaults.serverName + 
@@ -126,8 +124,8 @@ module.exports = (function () {
       ' from nodes';
       if(_.isEmpty(whereNode)) {
     	  cmd = cmd + '"';
-      } else {
-    	  cmd = cmd + ' where NODE_NAME=\'' + whereNode + '\'"';
+      } else {  	  
+    	  cmd = cmd + ' where NODE_NAME=\'' + whereNode.toUpperCase() + '\'"';
       }
       var child = shell.exec(cmd, {async: true});
       child.stdout.on('data', function(data) {
@@ -136,6 +134,7 @@ module.exports = (function () {
     	  for (var i = 0, len = arrayOfLines.length; i < len; i++) { 		  
     		  if (arrayOfLines[i].match(/^ANS\d\d\d\d/)) { continue; }
     		  var parsedLine = myRegex.exec(arrayOfLines[i]);
+    		  if(parsedLine !== null) {
     		  result.push({
     			  nodeName: parsedLine[1],
     			  domainName: parsedLine[2],
@@ -147,7 +146,8 @@ module.exports = (function () {
     			  platformName: parsedLine[9],
     			  instanceIp: "10.200.144.37",
     			  instancePort: "3501"
-    		    });	 
+    		    });
+    		  }
     	  }    	  
     	});
       child.stdout.on('end', function() { 

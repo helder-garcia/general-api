@@ -23,11 +23,16 @@ module.exports = function sendOK (data, options) {
   // Set status code
   res.status(200);
 
+  if (!(data instanceof Array)) {
+	  data = [data];
+  }
   // If appropriate, serve data as JSON(P)
   if (req.wantsJSON) {
     //return res.jsonx(data);
   }
+  
   return res.jsonx({ "count" : data.length, "data" : data});
+  
   // If second argument is a string, we take that to mean it refers to a view.
   // If it was omitted, use an empty object (`{}`)
   options = (typeof options === 'string') ? { view: options } : options || {};

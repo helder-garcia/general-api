@@ -55,5 +55,8 @@
     "url": "git@gitlab.supcd.serpro:37318942204/tsm-server-api.git"
   },
   "author": "37318942204",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "merge-defaults": "^0.2.1"
+  }
 }
