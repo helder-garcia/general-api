@@ -357,6 +357,7 @@ module.exports = (function () {
     create: function (conn, coll, values, cb) {
     	var self = this;
     	var originalValues = _.clone(values);
+
     	if(!Array.isArray(values)) values = [values];
 		  for (var i in values) {
 			    var record = values[i];
@@ -392,7 +393,12 @@ module.exports = (function () {
 			       */
 			      if (child.code == 10) return cb(new Error('Node name already exists'));
 			      if (child.code == 11) return cb(new Error("Domain name does not exist"));
-			      if (child.code == 0) cb(null, Array.isArray(originalValues) ? values : values[0]);
+			      if (child.code == 0) {
+		    		  record['instanceIp'] ="10.200.144.37";
+		    		  record['instancePort'] = "3501";
+		    		  cb(null, record);
+			      }
+			      //if (child.code == 0) cb(null, Array.isArray(originalValues) ? values : values[0]);
 			      /*
 			      child.stdout.on('data', function(data) {
 			    	  console.log(data);
