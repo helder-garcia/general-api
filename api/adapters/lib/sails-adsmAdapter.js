@@ -144,6 +144,7 @@ module.exports = (function () {
     			  lastAccTime: parsedLine[6] + 'T' + parsedLine[7],
     			  maxNummp: parsedLine[8],
     			  platformName: parsedLine[9],
+    			  instanceName: "SERVER1",
     			  instanceIp: "10.200.144.37",
     			  instancePort: "3501"
     		    });
@@ -394,6 +395,7 @@ module.exports = (function () {
 			      if (child.code == 10) return cb(new Error('Node name already exists'));
 			      if (child.code == 11) return cb(new Error("Domain name does not exist"));
 			      if (child.code == 0) {
+			    	  record['instanceName'] ="SERVER1";
 		    		  record['instanceIp'] ="10.200.144.37";
 		    		  record['instancePort'] = "3501";
 		    		  cb(null, record);
